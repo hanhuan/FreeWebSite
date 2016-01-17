@@ -1,0 +1,43 @@
+@CHARSET "UTF-8";
+	
+#githubserver{
+ 	text-align: center;
+	height:100%;
+	width:100%;
+}
+
+#show{
+	display:none;
+	height:100%;
+	width:100%;
+}
+
+#submit{
+	width:100px;	
+	margin-top:-8px;
+}
+
+#errorbar{
+	width:600px;
+	height:200px;
+}
+
+#errorbarLocation{
+	top:30%;
+	margin-left:-16%;
+	left:50%;
+	text-align:center;
+}
+
+#form{
+	margin-top:30px;
+
+}
+
+#url{
+	left:180px;
+}
+
+.githubserver_header{
+	height:100px;
+}

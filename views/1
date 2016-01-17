@@ -1,0 +1,177 @@
+
+<script>
+var previousURL = "";
+
+$(function(){
+	toggleErrorMessage("");
+	
+	$('#submit').click(function(){
+
+		var  url= $('#url').val();
+		loadPage(url);
+
+	});
+
+	$('#errorButton').click(function(){
+		toggleErrorMessage("");
+	});
+	
+});
+
+function loadPage(url){
+		
+		previousURL = url;
+
+		//if githubserver site
+/*		if(previousURL.indexOf("http://www.githubserver.com")==0 || previousURL.indexOf("http://www.githubserver.com") > 0){
+			return;
+		}
+		if(previousURL.indexOf("githubserver")>0){
+			return;
+		}
+		
+		
+	
+		if(previousURL.indexOf("http://")<0 || previousURL.indexOf("https://")<0){
+			previousURL = "http://" + previousURL;
+			
+		}
+		*/
+		console.log(previousURL);	
+		
+		setTimeout("loadPageCheck()",100);
+		
+		$('#show').load(previousURL,function(data){
+			if(data == undefined || data == null){
+				toggleErrorMessage("Invalid url");
+			}
+			
+		});
+
+};
+
+function loadPageCheck(){
+
+	if( $.trim($('#show').html()) == "" || $('#show').html()==undefined || $('#show').html()==null ){
+		//toggleErrorMessage("Invalid url");
+		
+	}else{
+		
+		$('#githubserver').hide();
+		$('#show').show();
+		
+	}
+
+	handler();
+}
+
+function handler(){
+	var previousUrlPartsArray = previousURL.split("/");
+	previousUrlPartsArray.pop();
+	
+	$('#show a').each(function(i){
+		updateCcsLink(this);
+	});
+	$('#show script').each(function(i){
+		updateScriptSrc(this);
+	});
+	
+	
+	
+};
+
+function updateCcsLink(tag){
+	var href = $(tag).attr('href');
+	
+	if(href.indexOf("http://")!=0 || href.indexOf("https://")!=0){
+		
+		var urlPartsArray = href.split("/");
+
+		var index = 0;
+		for(var i=0; i< urlPartsArray.length; i++){
+			if(".." == urlPartsArray[i]){
+				index ++;
+			}
+		}
+		
+		/*
+		 generate the new url .
+		*/
+		for(var i=0 ;i<index;i++){
+			previousUrlPartsArray.pop();
+			urlPartsArray=urlPartsArray.slice(1,urlPartsArray.length);
+		}
+		
+		var finalUrl = "";
+		if(previousUrlPartsArray.join("/") == ""){
+			finalUrl = urlPartsArray.join("/");
+		}else{
+			finalUrl = previousUrlPartsArray.join("/")+"/"+urlPartsArray.join("/");
+		}
+		
+		$(tag).attr('href',finalUrl);
+	}else if(href.indexOf("http://")==0 || href.indexOf("https://")==0){
+	}
+}
+
+function updateScriptSrc(tag){
+	var href = $(tag).attr('src');
+	
+	if(href.indexOf("http://")!=0 || href.indexOf("https://")!=0){
+		
+		var urlPartsArray = href.split("/");
+
+		var index = 0;
+		for(var i=0; i< urlPartsArray.length; i++){
+			if(".." == urlPartsArray[i]){
+				index ++;
+			}
+		}
+		
+		/*
+		 generate the new url .
+		*/
+		for(var i=0 ;i<index;i++){
+			previousUrlPartsArray.pop();
+			urlPartsArray=urlPartsArray.slice(1,urlPartsArray.length);
+		}
+		
+		var finalUrl = "";
+		if(previousUrlPartsArray.join("/") == ""){
+			finalUrl = urlPartsArray.join("/");
+		}else{
+			finalUrl = previousUrlPartsArray.join("/")+"/"+urlPartsArray.join("/");
+		}
+		
+		$(tag).attr('href',finalUrl);
+	}else if(href.indexOf("http://")==0 || href.indexOf("https://")==0){
+	}
+}
+
+function toggleErrorMessage(message){
+	$("#errorMessage").toggle();
+	$("#alertMessage").text(message);
+}
+
+
+</script>
+
+
+
+	<div id="errorMessage">
+		<div class="ui-overlay"><div class="ui-widget-overlay"></div></div>
+		<div id = "errorbarLocation" class="ui-widget" style="position:absolute; z-index:100;">
+			<div id = "errorbar" style="padding: 0 .7em;" class="ui-state-error ui-corner-all">
+				<p><span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-alert"></span>
+				<strong>Alert:</strong> <span id="alertMessage"></span></p>
+				
+				<p>Please input the correct URI.</p>
+				<br/>
+				<input id="errorButton" type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="CLOSE"></input>
+			</div>
+			
+		</div>
+	</div>
+	
+	
+	
